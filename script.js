@@ -17,6 +17,8 @@ let shootingStar;
 let game = true;
 let stars = [];
 
+let shipColl = "none";
+
 function preload(){
   alien = loadImage("https://cdn.glitch.com/fb3362c7-8e96-4501-923c-3d371f422938%2FCartoon-alien%20(1).svg?v=1595006239809");
   ship1Pic = loadImage("https://cdn.glitch.com/fb3362c7-8e96-4501-923c-3d371f422938%2F219-2191732_15-flat-vector-spaceship-sprites-spaceship-sprites-png.jpg?v=1595007334346");
@@ -73,6 +75,9 @@ function draw(){
       r.collide(ship1);
       r.collide(ship2);
     }
+  }else{
+    textSize(40);
+    text('Player $(shipColl) wins!', xCan/4, yCan/2)
   }
 }
 
