@@ -7,6 +7,7 @@
 *  noStroke, fill, ellipse, stroke
 *  windowWidth, windowHeight, image
 *  key, collideRectRect
+*  text, textSize
 */
 
 let alien, ship1, ship2, ship1Pic, ship2Pic;
@@ -37,6 +38,7 @@ function setup(){
     y: yCan - 75,
     w: 50,
     num: 1,
+    lives: 3,
   }
   
   ship2 = {
@@ -44,10 +46,14 @@ function setup(){
     y: yCan - 75,
     w: 50,
     num: 2,
+    lives: 3,
   }
   
-  rows.push(new row(-100));
-  rows.push(new row(xCan/2-100));
+  rows.push(new row(-100, 0));
+  rows.push(new row(xCan/2-100, 0));
+  
+  rows.push(new row(-100, -yCan/2));
+  rows.push(new row(xCan/2-100, -yCan/2));
 }
 
 function draw(){
@@ -79,7 +85,7 @@ function draw(){
     }
     
     textSize(15);
-    text('Player 1', xCan/4-35, 15);
+    text('Player 1', xCan/4-30, 15);
     text('Player 2', 3*xCan/4-5, 15);
   }else{
     textSize(40);
@@ -130,9 +136,9 @@ function keyPressed(){
 }
 
 class enemy{
-  constructor(x){
+  constructor(x, y){
     this.x = x;
-    this.y = 0;
+    this.y = y;
     this.w = 50;
     this.vel = 5;
   }
@@ -143,11 +149,11 @@ class enemy{
 }
 
 class row{
-  constructor(offset){  
+  constructor(offset, y){  
     this.aliens = [];
     let numAliens = random([1, 2, 2, 2, 3, 3])
     for(let i=1; i<=numAliens; i++){
-      this.aliens.push(new enemy((xCan/2)/numAliens*i + offset));
+      this.aliens.push(new enemy((xCan/2)/numAliens*i + offset, y));
     }
   }
   
@@ -167,12 +173,26 @@ class row{
   }
   
   collide(s){
-    for(var a of this.aliens){
-      if(a.y < yCan - a.w*3) break;
+    for(var i=0; i<this.aliens.length; i++){
+      if(this.aliens[i].y < yCan - this.aliens[i].w*3) break;
         
-      let hit = collideRectRect(s.x, s.y, s.w, s.w, a.x, a.y, a.w, a.w);
-      if(hit) game = false;
-      shipColl = s.num;
-    }
+      let hit = collideRectRect(s.x, s.y, s.w, s.w, this.aliens[i].x, this.aliens[i].y, this.aliens[i].w, this.aliens[i].w);
+      
+      if(hit){
+        if(i==0){
+          this.aliens.reverse();
+          this.aliens.pop();
+          this.aliens.reverse();
+        }else if(i==)
+        
+        s.lives--;
+        if(s.lives <= 0){
+          game = false;
+          shipColl = s.num;
+        }
+        
+        break;
+      }
+    } 
   }
 }
