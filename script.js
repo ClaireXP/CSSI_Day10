@@ -20,6 +20,9 @@ let stars = [];
 
 let shipColl = "none";
 
+let numAliensList = [2, 2, 2, 3, 3, 3, 3];
+let numRows = 6;
+
 function preload(){
   alien = loadImage("https://cdn.glitch.com/fb3362c7-8e96-4501-923c-3d371f422938%2FCartoon-alien%20(1).svg?v=1595006239809");
   ship1Pic = loadImage("https://cdn.glitch.com/fb3362c7-8e96-4501-923c-3d371f422938%2F219-2191732_15-flat-vector-spaceship-sprites-spaceship-sprites-png.jpg?v=1595007334346");
@@ -49,29 +52,16 @@ function setup(){
     lives: 3,
   }
   
-  rows.push(new row(-100, 0));
-  rows.push(new row(xCan/2-100, 0));
-  
-  rows.push(new row(-100, -yCan/3));
-  rows.push(new row(xCan/2-100, -yCan/3));
-  
-  rows.push(new row(-100, -2*yCan/3));
-  rows.push(new row(xCan/2-100, -2*yCan/3));
+  for(var i=0; i<numRows; i++){
+    rows.push(new row(-100, -i*yCan/numRows));
+    rows.push(new row(xCan/2-100, -i*yCan/numRows));
+  }
 }
 
 function draw(){
   if(game){
     background(0);
-    shootingStar.draw();
-
-    //Drawing stars 
-    for (var i = 0; i < 50; i++) {
-      var x = random(windowWidth); 
-      var y = random(windowHeight-200);
-      noStroke(); 
-      fill(255, 255, 0); 
-      ellipse(x, y, 2, 2);
-    }
+    drawStars();
 
     stroke(255);
     line(xCan/2, 0, xCan/2, yCan);
@@ -89,7 +79,9 @@ function draw(){
     
     textSize(15);
     text('Player 1', xCan/4-30, 15);
+    text('Lives: ' +ship1.lives, 5, 15);
     text('Player 2', 3*xCan/4-5, 15);
+    text('Lives: ' +ship2.lives, xCan/2+5, 15);
   }else{
     textSize(40);
     if(shipColl == 1) text('Player 2 wins!', xCan/3, yCan/2);
@@ -97,10 +89,24 @@ function draw(){
   }
 }
 
+function drawStars(){
+  shootingStar.draw();
+
+  //Drawing stars 
+  for (var i = 0; i < 50; i++) {
+    var x = random(windowWidth); 
+    var y = random(windowHeight-200);
+    noStroke(); 
+    fill(255, 255, 0); 
+    ellipse(x, y, 2, 2);
+  }
+}
+
 function Star() {
     //this.x = random(windowWidth);
       this.y = random(windowHeight-200);
 }
+
 Star.prototype.draw = function () {
        noStroke();
        fill(255, 255, 0);
@@ -138,6 +144,8 @@ function keyPressed(){
   if (keyCode == RIGHT_ARROW) ship2.x += 10;
 }
 
+
+
 class enemy{
   constructor(x, y){
     this.x = x;
@@ -154,7 +162,7 @@ class enemy{
 class row{
   constructor(offset, y){  
     this.aliens = [];
-    let numAliens = random([1, 2, 2, 2, 3, 3, 4])
+    let numAliens = random(numAliensList)
     for(let i=1; i<=numAliens; i++){
       this.aliens.push(new enemy((xCan/2)/numAliens*i + offset, y));
     }
@@ -172,7 +180,7 @@ class row{
       
       if(a.y > yCan){
         this.aliens = [];
-        let numAliens = random([1, 2, 2, 2, 3, 3])
+        let numAliens = random(numAliensList)
         for(let i=1; i<=numAliens; i++){
           this.aliens.push(new enemy((xCan/2)/numAliens*i + this.offset, 0));
         }
