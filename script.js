@@ -6,7 +6,7 @@
 *  random, line, HSB
 *  noStroke, fill, ellipse, stroke
 *  windowWidth, windowHeight, image
-*  key
+*  key, collideRectRect
 */
 
 let alien, ship1, ship2, ship1Pic, ship2Pic;
@@ -15,6 +15,7 @@ let xCan = 800;
 let yCan = 800;
 let shootingStar;
 let game = true;
+//let stars = [];
 
 function preload(){
   alien = loadImage("https://cdn.glitch.com/fb3362c7-8e96-4501-923c-3d371f422938%2FCartoon-alien%20(1).svg?v=1595006239809");
@@ -25,6 +26,9 @@ function preload(){
 function setup(){
   createCanvas(xCan, yCan);
   shootingStar = new ShootingStar;
+  //for (var i = 0; i < 50; i++) {
+     //stars.push(new Star());
+//}
   
   ship1 = {
     x: xCan/4 - 25,
@@ -38,7 +42,8 @@ function setup(){
     w: 50,
   }
   
-  rows.push(new row(0));
+  rows.push(new row(-100));
+  rows.push(new row(xCan/2-100));
 }
 
 function draw(){
@@ -65,8 +70,8 @@ function draw(){
     //Draw a row of aliens
     for(const r of rows){
       r.updateAliens();
-      r.collideRectRect(ship1);
-      r.collideRectRect(ship2);
+      r.collide(ship1);
+      r.collide(ship2);
     }
   }
 }
@@ -76,7 +81,11 @@ function draw(){
       //this.y = random(windowHeight-200);
 //}
 // Star.prototype.draw = function () {
-      //Code
+//        noStroke();
+//        fill(255, 255, 0);
+//        ellipse(this.x, this.y, 2, 2);
+//        this.x += (random(10) - 5)
+//        this.y += (random(10) - 5)
 //}
   // }
 
@@ -101,12 +110,12 @@ function ShootingStar(){
 function keyPressed(){
   //when a or d pressed, move ship 1
   //when LEFT_ARROW or RIGHT_ARROW pressed, move ship 2
-  if (key == 'a' && ship1>0) ship1.x -= 10;
-  if (key == 'd' && ship1<xCan/2-ship1.w) ship1.x += 10;
+  if (key == 'a') ship1.x -= 10;
+  if (key == 'd') ship1.x += 10;
   
   //when LEFT_ARROW or RIGHT_ARROW pressed, move ship 2
-  if (keyCode == LEFT_ARROW && ship2>xCan/2) ship2.x -= 10;
-  if (keyCode == RIGHT_ARROW && ship2<xCan-ship2.w) ship2.x += 10;
+  if (keyCode == LEFT_ARROW) ship2.x -= 10;
+  if (keyCode == RIGHT_ARROW) ship2.x += 10;
 }
 
 class enemy{
@@ -125,7 +134,7 @@ class enemy{
 class row{
   constructor(offset){  
     this.aliens = [];
-    let numAliens = random([2, 3, 4])
+    let numAliens = random([1, 2, 2, 2, 3, 3])
     for(let i=1; i<=numAliens; i++){
       this.aliens.push(new enemy((xCan/2)/numAliens*i + offset));
     }
@@ -135,6 +144,14 @@ class row{
     for(var a of this.aliens){
       a.updateY();
       image(alien, a.x, a.y, a.w, a.w)
+      
+      if(a.y > yCan){
+        for(const r of rows) rows.pop();
+        rows.pop();
+        
+        rows.push(new row(-100));
+        rows.push(new row(xCan/2-100));
+      }
     }
   }
   
