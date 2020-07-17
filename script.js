@@ -15,7 +15,7 @@ let xCan = 800;
 let yCan = 800;
 let shootingStar;
 let game = true;
-//let stars = [];
+let stars = [];
 
 function preload(){
   alien = loadImage("https://cdn.glitch.com/fb3362c7-8e96-4501-923c-3d371f422938%2FCartoon-alien%20(1).svg?v=1595006239809");
@@ -26,9 +26,9 @@ function preload(){
 function setup(){
   createCanvas(xCan, yCan);
   shootingStar = new ShootingStar;
-  //for (var i = 0; i < 50; i++) {
-     //stars.push(new Star());
-//}
+  for (var i = 0; i < 50; i++) {
+     stars.push(new Star());
+}
   
   ship1 = {
     x: xCan/4 - 25,
@@ -76,18 +76,17 @@ function draw(){
   }
 }
 
-// function Star() {
-  //   //this.x = random(windowWidth);
-      //this.y = random(windowHeight-200);
-//}
-// Star.prototype.draw = function () {
-//        noStroke();
-//        fill(255, 255, 0);
-//        ellipse(this.x, this.y, 2, 2);
-//        this.x += (random(10) - 5)
-//        this.y += (random(10) - 5)
-//}
-  // }
+function Star() {
+    //this.x = random(windowWidth);
+      this.y = random(windowHeight-200);
+}
+Star.prototype.draw = function () {
+       noStroke();
+       fill(255, 255, 0);
+       ellipse(this.x, this.y, 2, 2);
+       this.x += (random(10) - 5)
+       this.y += (random(10) - 5)
+}
 
 function ShootingStar(){
     this.x = random(windowWidth-200);
