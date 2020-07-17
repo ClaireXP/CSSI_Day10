@@ -36,12 +36,14 @@ function setup(){
     x: xCan/4 - 25,
     y: yCan - 75,
     w: 50,
+    num: 1,
   }
   
   ship2 = {
     x: 3*xCan/4 - 25,
     y: yCan - 75,
     w: 50,
+    num: 2,
   }
   
   rows.push(new row(-100));
@@ -75,9 +77,14 @@ function draw(){
       r.collide(ship1);
       r.collide(ship2);
     }
+    
+    textSize(15);
+    text('Player 1', xCan/4-35, 15);
+    text('Player 2', 3*xCan/4-5, 15);
   }else{
     textSize(40);
-    text('Player $(shipColl) wins!', xCan/4, yCan/2)
+    if(shipColl == 1) text('Player 2 wins!', xCan/3, yCan/2);
+    else text('Player 1 wins!', xCan/3, yCan/2);
   }
 }
 
@@ -165,6 +172,7 @@ class row{
         
       let hit = collideRectRect(s.x, s.y, s.w, s.w, a.x, a.y, a.w, a.w);
       if(hit) game = false;
+      shipColl = s.num;
     }
   }
 }
