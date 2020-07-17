@@ -6,12 +6,13 @@
 *  random, line, HSB
 *  noStroke, fill, ellipse, stroke
 *  windowWidth, windowHeight, image
+*  key
 */
 
 let alien, ship1, ship2, ship1Pic, ship2Pic;
 let rows = [];
 let xCan = 800;
-let yCan = 750;
+let yCan = 800;
 
 function preload(){
   alien = loadImage("https://cdn.glitch.com/fb3362c7-8e96-4501-923c-3d371f422938%2FCartoon-alien%20(1).svg?v=1595006239809");
@@ -23,16 +24,18 @@ function setup(){
   createCanvas(xCan, yCan);
   
   ship1 = {
-    x: xCan/4 - 50,
+    x: xCan/4 - 25,
     y: yCan - 75,
     w: 50,
   }
   
   ship2 = {
-    x: xCan/4 - 50,
+    x: 3*xCan/4 - 25,
     y: yCan - 75,
     w: 50,
   }
+  
+  rows.push(new row());
 }
 
 function draw(){
@@ -52,28 +55,41 @@ function draw(){
   
   //Draw Ships
   image(ship1Pic, ship1.x, ship1.y, ship1.w, ship1.w);
+  image(ship2Pic, ship2.x, ship2.y, ship2.w, ship2.w);
+  
+  //Draw a row of aliens
+  for(const r of rows){
+    r.updateAliens();
+  }
+}
+
+function ShootingStar(){
+  this.x = random(windowWidth-200);
+  this.y = random(windowHeight-400); 
+  this.w = 6;
+  this.h = 4;   
+}
+
+ShootingStar.prototype.draw = function() {
+  noStroke();
+  fill(255, 255, 0);
+  ellipse(this.x, this.y, this.w, this.h);
+  if (this.h > 0) {
+    this.h -= 0.5;
+  }
+  this.w += 7;
+  this.x += 5;
 }
 
 function keyPressed(){
   //when a or d pressed, move ship 1
   //when LEFT_ARROW or RIGHT_ARROW pressed, move ship 2
-  if (keyCode === 'A') { 
-      ship1.x -= 10;
-  }
-  
-  if (keyCode === 'D'){
-      ship1.x += 10;
-  }
+  if (key == 'a' && ship1>0) ship1.x -= 10;
+  if (key == 'd' && ship1<xCan/2-ship1.w) ship1.x += 10;
   
   //when LEFT_ARROW or RIGHT_ARROW pressed, move ship 2
-  if (keyCode === LEFT_ARROW) { 
-      ship2.x -= 10;
-  }
-  
-  if (keyCode === RIGHT_ARROW){
-       ship2.x += 10;
-  }
-  
+  if (keyCode == LEFT_ARROW && ship2>xCan/2) ship2.x -= 10;
+  if (keyCode == RIGHT_ARROW && ship2<xCan-ship2.w) ship2.x += 10;
 }
 
 class enemy{
@@ -101,6 +117,13 @@ class row{
   updateAliens(){
     for(const a of this.aliens){
       a.updateY();
+      image(alien, a.x, a.y, a.w, a.w)
     }
   }
+  
+  // collide(){
+  //   for(const a of this.aliens){
+  //     let hit = collideRectCircle();
+  //   }
+  // }
 }
