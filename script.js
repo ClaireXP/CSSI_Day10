@@ -1,5 +1,21 @@
-/* If you're feeling fancy you can add interactivity 
-    to your site with Javascript */
+/* global
 
-// prints "hi" in the browser's dev tools console
-console.log("hi");
+*/
+
+function preload(){
+  
+}
+
+function setup(){
+  
+}
+
+function draw(){
+  
+}
+
+function keyPressed(){
+  
+}
+
+cla
