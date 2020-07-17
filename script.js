@@ -52,8 +52,11 @@ function setup(){
   rows.push(new row(-100, 0));
   rows.push(new row(xCan/2-100, 0));
   
-  rows.push(new row(-100, -yCan/2));
-  rows.push(new row(xCan/2-100, -yCan/2));
+  rows.push(new row(-100, -yCan/3));
+  rows.push(new row(xCan/2-100, -yCan/3));
+  
+  rows.push(new row(-100, -2*yCan/3));
+  rows.push(new row(xCan/2-100, -2*yCan/3));
 }
 
 function draw(){
@@ -151,10 +154,13 @@ class enemy{
 class row{
   constructor(offset, y){  
     this.aliens = [];
-    let numAliens = random([1, 2, 2, 2, 3, 3])
+    let numAliens = random([1, 2, 2, 2, 3, 3, 4])
     for(let i=1; i<=numAliens; i++){
       this.aliens.push(new enemy((xCan/2)/numAliens*i + offset, y));
     }
+    
+    this.y = this.aliens[0].y;
+    this.offset = offset;
   }
   
   updateAliens(){
@@ -162,12 +168,14 @@ class row{
       a.updateY();
       image(alien, a.x, a.y, a.w, a.w)
       
+      this.y = a.y;
+      
       if(a.y > yCan){
-        for(const r of rows) rows.pop();
-        rows.pop();
-        
-        rows.push(new row(-100));
-        rows.push(new row(xCan/2-100));
+        this.aliens = [];
+        let numAliens = random([1, 2, 2, 2, 3, 3])
+        for(let i=1; i<=numAliens; i++){
+          this.aliens.push(new enemy((xCan/2)/numAliens*i + this.offset, 0));
+        }
       }
     }
   }
@@ -179,11 +187,18 @@ class row{
       let hit = collideRectRect(s.x, s.y, s.w, s.w, this.aliens[i].x, this.aliens[i].y, this.aliens[i].w, this.aliens[i].w);
       
       if(hit){
-        if(i==0){
+        if(i == 0){
           this.aliens.reverse();
           this.aliens.pop();
           this.aliens.reverse();
-        }else if(i==)
+        }else if(i == this.aliens.length-1){
+          this.aliens.pop();
+        }else{
+          let last = this.aliens[2];
+          this.aliens.pop();
+          this.aliens.pop();
+          this.aliens.push(last);
+        }
         
         s.lives--;
         if(s.lives <= 0){
